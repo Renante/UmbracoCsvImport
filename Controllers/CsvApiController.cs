@@ -13,7 +13,7 @@ using System.Net;
 using Umbraco.Web.Editors;
 using Umbraco.Web.Mvc;
 
-namespace UmbracoFormToFirebase.Controllers
+namespace UmbracoCsvImport.Controllers
 {
 
     [PluginController("Csv")]

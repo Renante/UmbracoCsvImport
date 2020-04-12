@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Umbraco.Core.Dashboards;
+﻿using Umbraco.Core.Dashboards;
 
-namespace UmbracoFormToFirebase.Compositions.Dashboards
+namespace UmbracoCsvImport.Compositions.Dashboards
 {
     public class CsvImportDashboard : IDashboard
     {
