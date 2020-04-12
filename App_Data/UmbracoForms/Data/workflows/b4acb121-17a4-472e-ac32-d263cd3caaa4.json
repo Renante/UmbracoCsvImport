@@ -1,0 +1,11 @@
+{
+  "id": "b4acb121-17a4-472e-ac32-d263cd3caaa4",
+  "name": "Save entry to Firestore",
+  "form": "0d34678d-b9a1-455b-b32d-161dc5ddd505",
+  "active": true,
+  "includeSensitiveData": "False",
+  "workflowTypeId": "ccbeb0d5-adaa-4729-8b4c-4bb439dc0888",
+  "executesOn": "Submitted",
+  "settings": {},
+  "sortOrder": 0
+}

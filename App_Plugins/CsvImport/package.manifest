@@ -1,0 +1,8 @@
+﻿{
+
+  "javascript": [
+    "~/App_Plugins/CsvImport/lib/ng-file-upload-all.min.js",
+    "~/App_Plugins/CsvImport/csvimport.resources.js?v=2",
+    "~/App_Plugins/CsvImport/csvimport.controllers.js?v=3"
+  ]
+}

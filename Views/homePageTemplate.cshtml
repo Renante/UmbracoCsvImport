@@ -1,0 +1,9 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@{
+	Layout = "layout.cshtml";
+}
+
+<h1>This is the homepage</h1>
+<div>
+@Umbraco.RenderMacro("renderUmbracoForm", new {FormGuid="0d34678d-b9a1-455b-b32d-161dc5ddd505", FormTheme="", ExcludeScripts="0"})
+</div>

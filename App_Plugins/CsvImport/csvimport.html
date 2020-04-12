@@ -1,0 +1,13 @@
+﻿
+    <div ng-controller="CsvImporterController as vm">
+        <umb-box>
+            <umb-box-header title="CSV Import" description="Import CSV file to Umbraco nodes."></umb-box-header>
+            <umb-box-content>
+                <div class="btn btn-action"
+                    name="file"
+                    ngf-pattern="'.csv'"
+                    ngf-accept="'.csv'"
+                    ngf-select="vm.upload($file)">Upload</div>
+            </umb-box-content>
+        </umb-box>
+    </div>
