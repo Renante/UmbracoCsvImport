@@ -1,4 +1,4 @@
-﻿function csvImporterResource($http, umbRequestHelper, Upload) {
+﻿function csvImportResource($http, umbRequestHelper, Upload) {
     return {
         upload: function (file) {
             return umbRequestHelper.resourcePromise(Upload.upload({
@@ -9,4 +9,4 @@
     }
 }
 
-angular.module("umbraco.resources").service("csvImporterResource", csvImporterResource);
+angular.module("umbraco.resources").service("csvImportResource", csvImportResource);

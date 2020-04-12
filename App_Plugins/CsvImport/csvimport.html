@@ -1,13 +1,24 @@
 ﻿
-    <div ng-controller="CsvImporterController as vm">
-        <umb-box>
-            <umb-box-header title="CSV Import" description="Import CSV file to Umbraco nodes."></umb-box-header>
-            <umb-box-content>
+<div ng-controller="CsvImportController as vm">
+    <umb-box>
+        <umb-box-header title="CSV Import" description="Import CSV file to Umbraco nodes."></umb-box-header>
+        <umb-box-content>
+
+            <div ng-show="vm.window.steps[0]">
                 <div class="btn btn-action"
-                    name="file"
-                    ngf-pattern="'.csv'"
-                    ngf-accept="'.csv'"
-                    ngf-select="vm.upload($file)">Upload</div>
-            </umb-box-content>
-        </umb-box>
-    </div>
+                     name="file"
+                     ngf-pattern="'.csv'"
+                     ngf-accept="'.csv'"
+                     ngf-select="vm.upload($file)">Upload</div>
+            </div>
+
+            <div ng-show="vm.window.steps[1]">
+                <span>Select Parent Node:</span><br />
+                <button ng-click="vm.selectParentNode();"
+                        class="btn btn-default">
+                    Browse
+                </button>
+            </div>
+        </umb-box-content>
+    </umb-box>
+</div>
