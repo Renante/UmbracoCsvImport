@@ -14,10 +14,48 @@
 
             <div ng-show="vm.window.steps[1]">
                 <span>Select Parent Node:</span><br />
-                <button ng-click="vm.selectParentNode();"
-                        class="btn btn-default">
-                    Browse
+                <umb-button type="button"
+                            label="Browse"
+                            button-style="default"
+                            action="vm.selectParentNode();">
+                </umb-button>
+            </div>
+
+            <div ng-show="vm.window.steps[2]">
+                <div ng-if="vm.contentTypes.length">
+                    <span>Select Content Type:</span><br />
+                    <select style="margin-bottom:0;"
+                            ng-model="vm.selectedContentType"
+                            ng-options="contentType as contentType.name for contentType in vm.contentTypes">
+                    </select>
+                    <umb-button type="button"
+                                label="Submit"
+                                button-style="action"
+                                action="vm.processContentType()">
+                    </umb-button>
+                </div>
+                <p ng-if="!vm.contentTypes.length">
+                    No allowed types detected for selected node.
+                </p>
+
+            </div>
+
+            <div ng-show="vm.window.steps[3]">
+
+                <div ng-repeat="prop in vm.contentTypeProps" class="flex">
+                    <div class="w-25">
+                        <span>{{ prop.label }}</span>
+                    </div>
+                    <div class="w-25">
+                        <select ng-model="prop.csvHeader"
+                                ng-options="header for header in vm.headers">
+                        </select>
+                    </div>
+                </div>
+                <button type="button" ng-click="vm.submit()" ng-disabled="vm.processing" class="btn btn-action">
+                    {{ vm.processing ? 'Processing...' : 'Submit' }}
                 </button>
+                <p>This may take a while for large records.</p>
             </div>
         </umb-box-content>
     </umb-box>
