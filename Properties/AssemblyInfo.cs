@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("UmbracoCsvImport")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Import CSV file into Umbraco as nodes")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Renante Abril")]
 [assembly: AssemblyProduct("UmbracoCsvImport")]
 [assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]

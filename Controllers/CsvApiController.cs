@@ -76,8 +76,8 @@ namespace UmbracoCsvImport.Controllers
                 while (csv.Read())
                 {
                     var name = csv.GetField(data.Fields.FirstOrDefault(field => field.PropertyTypeAlias.Equals("__name")).Header);
-                    var content = contentService.Create(!string.IsNullOrEmpty(name) ? name : Guid.NewGuid().ToString(), data.ParentId, contentType.Alias);
-                    foreach(var field in data.Fields.Where(field => !field.PropertyTypeAlias.Equals("__name")))
+                    var content = contentService.Create(!string.IsNullOrEmpty(name) ? name : "Unnamed", data.ParentId, contentType.Alias);
+                    foreach(var field in data.Fields.Where(field => !field.PropertyTypeAlias.Equals("__name") && field.Header != null))
                         content.SetValue(field.PropertyTypeAlias, csv.GetField(field.Header));
                     contentService.SaveAndPublish(content);
                 }
