@@ -24,8 +24,10 @@
 
                 <hr />
 
-                <umb-checkbox model="confirmed" text="{{labels.deleteConfirm}}">
-                </umb-checkbox>
+                <label class="checkbox">
+                	<input type="checkbox" ng-model="confirmed" />
+                    <localize key="contentTypeEditor_yesDelete">Yes, delete</localize> {{currentNode.name}} <localize key="contentTypeEditor_andAllMediaItems">and all media items using this type</localize>
+                </label>
 
                 <umb-confirm ng-if="confirmed" on-confirm="performDelete" on-cancel="cancel">
                 </umb-confirm>

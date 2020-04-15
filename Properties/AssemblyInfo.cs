@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("UmbracoCsvImport")]
-[assembly: AssemblyDescription("Import CSV file into Umbraco as nodes")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Renante Abril")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("UmbracoCsvImport")]
 [assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("f78eda30-fc4b-4750-a082-2a2c9fec11c0")]
+[assembly: Guid("def55e1c-b3ca-49c3-ae32-46edb15fe388")]
 
 // Version information for an assembly consists of the following four values:
 //

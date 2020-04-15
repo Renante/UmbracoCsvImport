@@ -13,6 +13,7 @@ using System.Net;
 using Umbraco.Web.Editors;
 using Umbraco.Web.Mvc;
 using Umbraco.Core.Services;
+using Umbraco.Core.Logging;
 
 namespace UmbracoCsvImport.Controllers
 {
@@ -22,13 +23,16 @@ namespace UmbracoCsvImport.Controllers
     {
 
         const string csvPath = "~/App_Data/csvimport/";
+
         private readonly IContentTypeService contentTypeService;
         private readonly IContentService contentService;
+        private readonly ILogger logger;
 
-        public CsvApiController(IContentTypeService contentTypeService, IContentService contentService)
+        public CsvApiController(IContentTypeService contentTypeService, IContentService contentService, ILogger logger)
         {
             this.contentTypeService = contentTypeService;
             this.contentService = contentService;
+            this.logger = logger;
         }
 
         [HttpPost]
@@ -68,35 +72,32 @@ namespace UmbracoCsvImport.Controllers
         {
             var contentType = contentTypeService.Get(data.ContentTypeId);
 
-            using (var reader = new StreamReader($"{HttpContext.Current.Server.MapPath(csvPath)}/file.csv"))
-            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            try
             {
-                csv.Read();
-                csv.ReadHeader();
-                while (csv.Read())
+                using (var reader = new StreamReader($"{HttpContext.Current.Server.MapPath(csvPath)}/file.csv"))
+                using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
                 {
-                    var name = csv.GetField(data.Fields.FirstOrDefault(field => field.PropertyTypeAlias.Equals("__name")).Header);
-                    var content = contentService.Create(!string.IsNullOrEmpty(name) ? name : "Unnamed", data.ParentId, contentType.Alias);
-                    foreach(var field in data.Fields.Where(field => !field.PropertyTypeAlias.Equals("__name") && field.Header != null))
-                        content.SetValue(field.PropertyTypeAlias, csv.GetField(field.Header));
-                    contentService.SaveAndPublish(content);
+                    csv.Read();
+                    csv.ReadHeader();
+                    while (csv.Read())
+                    {
+                        var name = csv.GetField(data.Fields.FirstOrDefault(field => field.PropertyTypeAlias.Equals("__name")).Header);
+                        var content = contentService.Create(!string.IsNullOrEmpty(name) ? name : "Unnamed", data.ParentId, contentType.Alias);
+                        foreach (var field in data.Fields.Where(field => !field.PropertyTypeAlias.Equals("__name") && field.Header != null))
+                            content.SetValue(field.PropertyTypeAlias, csv.GetField(field.Header));
+
+                        contentService.SaveAndPublish(content);
+                        logger.Info<CsvApiController>("Content published: " + content.Name);
+                    }
                 }
+
+                return Request.CreateResponse(HttpStatusCode.OK);
             }
             
-            return Request.CreateResponse(HttpStatusCode.OK);
-        }
-
-
-        [HttpGet]
-        public void DeleteNodes()
-        {
-            //var home = contentService.GetById(1063);
-            //long totalRecords;
-            //var all = contentService.GetPagedChildren(home.Id, 0, 9999, out totalRecords);
-            //return all.Count();
-
-            contentService.DeleteOfType(1064);
-            
+            catch(Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
+            }
         }
     }
 

@@ -128,10 +128,7 @@
         /*****************************************************************************/
         $scope.exitPreview = function () {
             var culture = $location.search().culture || getParameterByName('culture');
-            var relativeUrl = '/' + $scope.pageId;
-            if (culture) {
-                relativeUrl += '?culture=' + culture;
-            }
+            var relativeUrl = '/' + $scope.pageId + '?culture=' + culture;
             window.top.location.href = '../preview/end?redir=' + encodeURIComponent(relativeUrl);
         };
         $scope.onFrameLoaded = function (iframe) {

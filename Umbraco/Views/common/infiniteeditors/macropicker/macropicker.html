@@ -29,14 +29,13 @@
                                         no-dirty-check />
                             </div>
 
-                            <ul class="umb-card-grid -three-in-row">
+                            <ul class="umb-card-grid">
                                 <li ng-repeat="availableItem in macros | orderBy:'name' | filter:searchTerm"
-                                    ng-click="selectMacro(availableItem)">
+                                    ng-click="selectMacro(availableItem)"
+                                    class="-three-in-row">
                                     <a class="umb-card-grid-item" href="" title="{{ availableItem.name }}">
-                                        <span>
-                                            <i class="icon-settings-alt"></i>
-                                            {{ availableItem.name }}
-                                        </span>
+                                        <i class="icon-settings-alt"></i>
+                                        {{ availableItem.name }}
                                     </a>
                                 </li>
                             </ul>

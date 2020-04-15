@@ -7,7 +7,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <base href="@ViewData.GetUmbracoBaseFolder()/" />
+    <base href="@ViewBag.UmbracoBaseFolder/" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -66,8 +66,8 @@
         var Umbraco = {};
         Umbraco.Sys = {};
         Umbraco.Sys.ServerVariables = {
-            "installApiBaseUrl": "@ViewData.GetInstallApiBaseUrl()",
-            "umbracoBaseUrl": "@ViewData.GetUmbracoBaseFolder()"
+            "installApiBaseUrl": "@ViewBag.InstallApiBaseUrl",
+            "umbracoBaseUrl": "@ViewBag.UmbracoBaseFolder"
         };
     </script>
     <script src="lib/lazyload-js/lazyload.min.js"></script>

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29926.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UmbracoCsvImport", "UmbracoCsvImport.csproj", "{F78EDA30-FC4B-4750-A082-2A2C9FEC11C0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UmbracoCsvImport", "UmbracoCsvImport.csproj", "{DEF55E1C-B3CA-49C3-AE32-46EDB15FE388}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F78EDA30-FC4B-4750-A082-2A2C9FEC11C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F78EDA30-FC4B-4750-A082-2A2C9FEC11C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F78EDA30-FC4B-4750-A082-2A2C9FEC11C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F78EDA30-FC4B-4750-A082-2A2C9FEC11C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEF55E1C-B3CA-49C3-AE32-46EDB15FE388}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEF55E1C-B3CA-49C3-AE32-46EDB15FE388}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEF55E1C-B3CA-49C3-AE32-46EDB15FE388}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEF55E1C-B3CA-49C3-AE32-46EDB15FE388}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {AD8E27C7-D658-4175-9644-F9859B310351}
+		SolutionGuid = {1FD04CB7-4C37-45C7-BA78-0274B277C97B}
 	EndGlobalSection
 EndGlobal

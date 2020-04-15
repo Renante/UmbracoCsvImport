@@ -104,7 +104,12 @@
                                     <umb-control-group
                                         ng-repeat="(category, permissions) in vm.userGroup.defaultPermissions"
                                         label="{{ category }}">
-                                        <umb-toggle-group items="permissions"></umb-toggle-group>
+                                        <umb-permission
+                                            ng-repeat="permission in permissions"
+                                            name="permission.name"
+                                            description="permission.description"
+                                            selected="permission.checked">
+                                        </umb-permission>
                                     </umb-control-group>
                                 </umb-box-content>
                             </umb-box>
