@@ -1,9 +1,9 @@
 ﻿function CsvImportController(
     Upload,
-    csvImportResource,
     contentTypeResource,
+    contentResource,
     editorService,
-    notificationsService) {
+    $timeout) {
 
     var vm = this;
     
@@ -21,9 +21,13 @@
     }
 
     vm.upload = function (file) {
-        csvImportResource.upload(file).then(function (result) {
-            vm.headers = result;
-            vm.window.next();
+        Papa.parse(file, {
+            header: true,
+            complete: function (results) {
+                vm.csvHeaders = results.meta.fields;
+                vm.csvData = results.data;
+                vm.window.next();
+            }
         });
     };
 
@@ -33,7 +37,7 @@
                 vm.parentNodeId = model.selection[0].id;
                 contentTypeResource.getAllowedTypes(vm.parentNodeId)
                     .then(function (result) {
-                        vm.contentTypes = result.map(item => ({ id: item.id, name: item.name }));
+                        vm.contentTypes = result.map(item => ({ id: item.id, name: item.name, alias: item.alias }));
                         editorService.close();
                         vm.window.next();
                     });
@@ -47,12 +51,27 @@
 
     vm.processContentType = function () {
         contentTypeResource.getById(vm.selectedContentType.id).then(function (result) {
-            vm.contentTypeProps = [];
-            vm.contentTypeProps.push({ label: 'Name', alias: '__name', editor: '' });
+            vm.contentTypeProps = {
+                name: '',
+                groups: [] 
+            };
             angular.forEach(result.groups, function (group) {
+                var newGroup = {
+                    name: group.name,
+                    id: group.id,
+                    properties: []
+                }
                 angular.forEach(group.properties, function (prop) {
-                    vm.contentTypeProps.push({ label: prop.label, alias: prop.alias, editor: prop.editor });
+                    newGroup.properties.push(
+                        {
+                            label: prop.label,
+                            alias: prop.alias,
+                            editor: prop.editor,
+                            isMandatory: prop.validation.mandatory
+                        }
+                    );
                 });
+                vm.contentTypeProps.groups.push(newGroup);
             });
             vm.window.next();
         });
@@ -60,24 +79,47 @@
 
     vm.processing = false;
     vm.submit = function () {
-        var data = {
-            ParentId: vm.parentNodeId,
-            ContentTypeId: vm.selectedContentType.id,
-            Fields: []
-        }
+        if (vm.importForm.$valid) {
+            vm.processing = true;
+            vm.currentItem = 0;
+            angular.forEach(vm.csvData.slice(0,5), function (row) {
+                contentResource.getScaffold(vm.parentNodeId, vm.selectedContentType.alias)
+                    .then(function (scaffold) {
+                        var myDoc = scaffold;
+                        
+                        myDoc.variants[0].name = row[vm.contentTypeProps.name].substring(0, 250);
+                        angular.forEach(vm.contentTypeProps.groups, function (group) {
+                            angular.forEach(group.properties, function (prop) {
+                                var fieldValue = row[prop.csvHeader];
+                                switch (prop.editor) {
+                                    case 'Umbraco.TextBox':
+                                        fieldValue = fieldValue.substring(0, 250);
+                                        break;
 
-        angular.forEach(vm.contentTypeProps, function (prop) {
-            data.Fields.push({ PropertyTypeAlias: prop.alias, Header: prop.csvHeader });
-        });
+                                    default:
+                                }
 
-        vm.processing = true;
-        csvImportResource.submit(data).then(function () {
+                                myDoc.variants[0].tabs.find(t => t.id === group.id).properties.find(p => p.alias === prop.alias).value = fieldValue;
+                            });
+                        });
+
+                        myDoc.variants[0].save = true;
+
+                        contentResource.publish(myDoc, true, [''])
+                            .then(function (content) {
+                                vm.currentItem++;
+                            });
+                        
+                    });
+            });
             vm.processing = false;
-            notificationsService.success('Done importing data');
-        });
+            vm.window.next();
+        }
+        else {
+            console.log('Invalid form');
+        }
     }
 };
-
 
 app.requires.push('ngFileUpload'); 
 angular.module("umbraco").controller("CsvImportController", CsvImportController);

@@ -408,6 +408,7 @@
     <Content Include="App_Plugins\CsvImport\csvimport.resources.js" />
     <Content Include="App_Plugins\CsvImport\lang\en-US.xml" />
     <Content Include="App_Plugins\CsvImport\lib\ng-file-upload-all.min.js" />
+    <Content Include="App_Plugins\CsvImport\lib\papaparse.min.js" />
     <Content Include="App_Plugins\ModelsBuilder\modelsbuilder.controller.js" />
     <Content Include="App_Plugins\ModelsBuilder\modelsbuilder.html" />
     <Content Include="App_Plugins\ModelsBuilder\modelsbuilder.resource.js" />
@@ -438,6 +439,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Compositions\Dashboards\CsvImportDashboard.cs" />
     <Compile Include="Controllers\CsvApiController.cs" />
+    <Compile Include="Controllers\ToolsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
