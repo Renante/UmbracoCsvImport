@@ -26,7 +26,8 @@
                     <span>Select Content Type:</span><br />
                     <select style="margin-bottom:0;"
                             ng-model="vm.selectedContentType"
-                            ng-options="contentType as contentType.name for contentType in vm.contentTypes">
+                            ng-options="contentType as contentType.name for contentType in vm.contentTypes"
+                            no-dirty-check>
                     </select>
                     <umb-button type="button"
                                 label="Submit"
@@ -55,6 +56,7 @@
                                         ng-options="header for header in vm.csvHeaders"
                                         name="{{'name_' + variantKey}}"
                                         style="margin-bottom:2px;"
+                                        no-dirty-check
                                         required>
                                 </select>
                                 <span ng-if="vm.importForm.$submitted && vm.importForm['name_' + variantKey].$invalid">This field is required.</span>
@@ -72,7 +74,8 @@
                                             ng-options="header for header in vm.csvHeaders"
                                             ng-required="prop.validation.mandatory"
                                             name="{{ 'field_' + variantKey + '_' + tabKey + '_' + propKey  }}"
-                                            style="margin-bottom:2px;">
+                                            style="margin-bottom:2px;"
+                                            no-dirty-check>
                                     </select>
 
                                     <span ng-if="vm.importForm.$submitted && vm.importForm['field_' + variantKey + '_' + tabKey + '_' + propKey].$invalid">This field is required.</span>
