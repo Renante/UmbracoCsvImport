@@ -57,9 +57,6 @@
     <Reference Include="CSharpTest.Net.Collections, Version=14.906.1403.1082, Culture=neutral, PublicKeyToken=06aee00cce822474, processorArchitecture=MSIL">
       <HintPath>packages\CSharpTest.Net.Collections.14.906.1403.1082\lib\net40\CSharpTest.Net.Collections.dll</HintPath>
     </Reference>
-    <Reference Include="CsvHelper, Version=15.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
-      <HintPath>packages\CsvHelper.15.0.4\lib\net47\CsvHelper.dll</HintPath>
-    </Reference>
     <Reference Include="Examine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\Examine.1.0.0\lib\net452\Examine.dll</HintPath>
     </Reference>
@@ -404,10 +401,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Plugins\CsvImport\csvimport.controllers.js" />
+    <Content Include="App_Plugins\CsvImport\csvimport.css" />
     <Content Include="App_Plugins\CsvImport\csvimport.html" />
-    <Content Include="App_Plugins\CsvImport\csvimport.resources.js" />
     <Content Include="App_Plugins\CsvImport\lang\en-US.xml" />
-    <Content Include="App_Plugins\CsvImport\lib\ng-file-upload-all.min.js" />
     <Content Include="App_Plugins\CsvImport\lib\papaparse.min.js" />
     <Content Include="App_Plugins\ModelsBuilder\modelsbuilder.controller.js" />
     <Content Include="App_Plugins\ModelsBuilder\modelsbuilder.html" />
@@ -437,8 +433,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Compositions\Dashboards\CsvImportDashboard.cs" />
-    <Compile Include="Controllers\CsvApiController.cs" />
     <Compile Include="Controllers\ToolsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

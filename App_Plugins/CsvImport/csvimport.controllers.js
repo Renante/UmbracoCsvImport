@@ -1,5 +1,4 @@
 ﻿function CsvImportController(
-    Upload,
     contentTypeResource,
     contentResource,
     editorService) {
@@ -20,12 +19,14 @@
     }
 
     vm.isCsvReady = false;
-    vm.upload = function (file) {
+    vm.upload = function () {
+        var file = document.getElementById('csvImportFile').files[0];
         Papa.parse(file, {
             header: true,
             complete: function (results) {
                 vm.csvHeaders = results.meta.fields;
                 vm.csvData = results.data.slice(0, 5);
+                vm.totalCsvRows = vm.csvData.length;
                 vm.isCsvReady = true;
             }
         });
@@ -51,6 +52,7 @@
         editorService.contentPicker(contentPickerConfig);
     }
 
+    vm.processingContentType = false;
     vm.processContentType = function () {
         contentTypeResource.getById(vm.selectedContentType.id).then(function (result) {
             contentResource.getScaffold(vm.parentNodeId, vm.selectedContentType.alias)
@@ -84,10 +86,8 @@
             contentResource.getScaffold(vm.parentNodeId, vm.selectedContentType.alias)
                 .then(function (scaffold) {
                     var myDoc = scaffold;
-
                     myDoc.variants.length = 0;
                     myDoc.variants.push.apply(myDoc.variants, vm.editableVariants);
-
                     angular.forEach(myDoc.variants, function (variant) {
                         variant.name = row[variant.csvHeader].substring(0, 250);
                         angular.forEach(variant.tabs, function (tab) {
@@ -109,7 +109,7 @@
                         variant.publish = true;
                     });
 
-                    contentResource.publish(myDoc, true, [''])
+                    contentResource.publish(myDoc, true, [''], false)
                         .then(function (content) {
                             vm.currentItem++;
                             vm.csvData.shift();
@@ -124,5 +124,4 @@
     }
 };
 
-app.requires.push('ngFileUpload');
 angular.module("umbraco").controller("CsvImportController", CsvImportController);

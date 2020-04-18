@@ -5,15 +5,22 @@
         <umb-box-content>
 
             <div ng-show="vm.window.steps[0]">
-                <div class="btn btn-action"
-                     name="file"
-                     ngf-pattern="'.csv'"
-                     ngf-accept="'.csv'"
-                     ngf-select="vm.upload($file)">Upload</div>
+                <div class="step-label">
+                    <h3>Step 1 of 4:</h3>
+                    <h4>Upload CSV File</h4>
+                </div>
+                <input type="file" accept="'.csv'" id="csvImportFile"/><br/>
+                <umb-button type="button"
+                            label="Upload"
+                            button-style="action"
+                            action="vm.upload()"></umb-button>
             </div>
 
             <div ng-show="vm.window.steps[1]">
-                <span>Select Parent Node:</span><br />
+                <div class="step-label">
+                    <h3>Step 2 of 4:</h3>
+                    <h4>Select Parent Node</h4>
+                </div>
                 <umb-button type="button"
                             label="Browse"
                             button-style="action"
@@ -23,7 +30,10 @@
 
             <div ng-show="vm.window.steps[2]">
                 <div ng-if="vm.contentTypes.length">
-                    <span>Select Content Type:</span><br />
+                    <div class="step-label">
+                        <h3>Step 3 of 4:</h3>
+                        <h4>Select Content Type</h4>
+                    </div>
                     <select style="margin-bottom:0;"
                             ng-model="vm.selectedContentType"
                             ng-options="contentType as contentType.name for contentType in vm.contentTypes"
@@ -32,7 +42,8 @@
                     <umb-button type="button"
                                 label="Submit"
                                 button-style="action"
-                                action="vm.processContentType()">
+                                disabled="vm.processingContentType"
+                                action="vm.processingContentType = true;vm.processContentType()">
                     </umb-button>
                 </div>
                 <p ng-if="!vm.contentTypes.length">
@@ -42,14 +53,16 @@
             </div>
 
             <div ng-show="vm.window.steps[3] && vm.isCsvReady">
+                <div class="step-label">
+                    <h3>Step 4 of 4:</h3>
+                    <h4>Map Fields</h4>
+                </div>
                 <ng-form name="vm.importForm" novalidate>
-
-                    <div ng-repeat="(variantKey, variant) in vm.editableVariants">
-
-                        <h3><strong>{{ variant.language.name }}</strong></h3>
+                    <div ng-repeat="(variantKey, variant) in vm.editableVariants" class="panel-variant">
+                        <h4 class="mb-1"><strong>{{ variant.language.name }}</strong></h4>
                         <div class="flex">
                             <div class="w-25">
-                                <span>Name: * </span>
+                                <span>Page name: * </span>
                             </div>
                             <div class="w-25" style="margin-bottom:10px;">
                                 <select ng-model="variant.csvHeader"
@@ -64,7 +77,7 @@
                         </div>
 
                         <div ng-repeat="(tabKey, tab) in variant.tabs">
-                            <h4 style="margin-bottom:20px;"><strong>{{ tab.label }}</strong></h4>
+                            <h5 style="margin-bottom:20px;"><strong>{{ tab.label }}</strong></h5>
                             <div ng-repeat="(propKey, prop) in tab.properties" class="flex">
                                 <div class="w-25">
                                     <span>{{ prop.label }} <span ng-if="prop.validation.mandatory">*</span> </span>
@@ -84,15 +97,15 @@
                         </div>
                     </div>
                     <button type="submit" ng-click="vm.submit()" ng-disabled="vm.processing" class="btn btn-action">
-                        {{ vm.processing ? 'Processing ' + vm.currentItem + ' out of ' + vm.csvData.length + ' records...' : 'Submit' }}
+                        {{ vm.processing ? 'Processing...' : 'Submit' }}
                     </button>
+                    
+                    <p class="my-1" ng-if="vm.processing">{{ 'Processing ' + vm.currentItem + ' out of ' + vm.totalCsvRows + ' records...' }}</p>
                 </ng-form>
-                <br /><br />
-                <p>This may take a while for large records.</p>
             </div>
 
             <div ng-show="vm.window.steps[4]">
-                <h3>Completed</h3>
+                <h3>Completed!</h3>
             </div>
         </umb-box-content>
     </umb-box>
