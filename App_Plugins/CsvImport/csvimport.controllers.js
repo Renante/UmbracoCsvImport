@@ -25,7 +25,7 @@
             header: true,
             complete: function (results) {
                 vm.csvHeaders = results.meta.fields;
-                vm.csvData = results.data;
+                vm.csvData = results.data.slice(0, 5);
                 vm.isCsvReady = true;
             }
         });
@@ -70,47 +70,56 @@
         if (vm.importForm.$valid) {
             vm.processing = true;
             vm.currentItem = 0;
-            angular.forEach(vm.csvData.slice(0, 1), function (row) {
-                contentResource.getScaffold(vm.parentNodeId, vm.selectedContentType.alias)
-                    .then(function (scaffold) {
-                        var myDoc = scaffold;
-                        
-                        myDoc.variants.length = 0;
-                        myDoc.variants.push.apply(myDoc.variants, vm.editableVariants);
 
-                        angular.forEach(myDoc.variants, function (variant) {
-                            variant.name = row[variant.csvHeader].substring(0, 250);
-                            angular.forEach(variant.tabs, function (tab) {
-                                angular.forEach(tab.properties, function (prop) {
-                                    var fieldValue = row[prop.csvHeader];
-                                    if (fieldValue) {
-                                        switch (prop.editor) {
-                                            case 'Umbraco.TextBox':
-                                                fieldValue = fieldValue.substring(0, 250);
-                                                break;
-                                            default:
-                                        }
-                                        prop.value = fieldValue;
-                                    }
-                                });
-                            });
-
-                            variant.save = true;
-                            variant.publish = true;
-                        });
-
-                        contentResource.publish(myDoc, true, [''])
-                            .then(function (content) {
-                                vm.currentItem++;
-                            });
-
-                    });
-            });
-            vm.processing = false;
-            vm.window.next();
+            processData();
         }
         else {
             console.log('Invalid form');
+        }
+    }
+
+    function processData() {
+        var row = vm.csvData[0];
+        if (row) {
+            contentResource.getScaffold(vm.parentNodeId, vm.selectedContentType.alias)
+                .then(function (scaffold) {
+                    var myDoc = scaffold;
+
+                    myDoc.variants.length = 0;
+                    myDoc.variants.push.apply(myDoc.variants, vm.editableVariants);
+
+                    angular.forEach(myDoc.variants, function (variant) {
+                        variant.name = row[variant.csvHeader].substring(0, 250);
+                        angular.forEach(variant.tabs, function (tab) {
+                            angular.forEach(tab.properties, function (prop) {
+                                var fieldValue = row[prop.csvHeader];
+                                if (fieldValue) {
+                                    switch (prop.editor) {
+                                        case 'Umbraco.TextBox':
+                                            fieldValue = fieldValue.substring(0, 250);
+                                            break;
+                                        default:
+                                    }
+                                    prop.value = fieldValue;
+                                }
+                            });
+                        });
+
+                        variant.save = true;
+                        variant.publish = true;
+                    });
+
+                    contentResource.publish(myDoc, true, [''])
+                        .then(function (content) {
+                            vm.currentItem++;
+                            vm.csvData.shift();
+                            processData();
+                        });
+                });
+        }
+        else {
+            vm.processing = false;
+            vm.window.next();
         }
     }
 };
