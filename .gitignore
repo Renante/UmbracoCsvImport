@@ -1,7 +1,5 @@
-/App_Data
-/bin
-/Media
-/obj
-/packages
-.vs
-*.nupkg
+# Ignore everything:
+*
+
+# Except for the themes directories:
+!App_Plugins/CsvImport
