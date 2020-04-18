@@ -40,38 +40,43 @@
 
             </div>
 
-            <div ng-show="vm.window.steps[3]">
+            <div ng-show="vm.window.steps[3] && vm.isCsvReady">
                 <ng-form name="vm.importForm" novalidate>
 
-                    <div class="flex">
-                        <div class="w-25">
-                            <span>Name: * </span>
-                        </div>
-                        <div class="w-25" style="margin-bottom:10px;">
-                            <select ng-model="vm.contentTypeProps.name"
-                                    ng-options="header for header in vm.csvHeaders"
-                                    name="name"
-                                    style="margin-bottom:2px;"
-                                    required>
-                            </select>
-                            <span ng-if="vm.importForm.$submitted && vm.importForm.name.$invalid">This field is required.</span>
-                        </div>
-                    </div>
+                    <div ng-repeat="(variantKey, variant) in vm.editableVariants">
 
-                    <div ng-repeat="group in vm.contentTypeProps.groups">
-                        <h4 style="margin-bottom:20px;"><strong>{{ group.name }}</strong></h4>
-                        <div ng-repeat="prop in group.properties" class="flex">
+                        <h3><strong>{{ variant.language.name }}</strong></h3>
+                        <div class="flex">
                             <div class="w-25">
-                                <span>{{ prop.label }} <span ng-if="prop.isMandatory">*</span> </span>
+                                <span>Name: * </span>
                             </div>
                             <div class="w-25" style="margin-bottom:10px;">
-                                <select ng-model="prop.csvHeader"
+                                <select ng-model="variant.csvHeader"
                                         ng-options="header for header in vm.csvHeaders"
-                                        ng-required="prop.isMandatory"
-                                        name="{{ 'field_' + $parent.$index + '_' + $index  }}"
-                                        style="margin-bottom:2px;">
+                                        name="{{'name_' + variantKey}}"
+                                        style="margin-bottom:2px;"
+                                        required>
                                 </select>
-                                <span ng-if="vm.importForm.$submitted && vm.importForm['field_' + $parent.$index + '_' + $index].$invalid">This field is required.</span>
+                                <span ng-if="vm.importForm.$submitted && vm.importForm['name_' + variantKey].$invalid">This field is required.</span>
+                            </div>
+                        </div>
+
+                        <div ng-repeat="(tabKey, tab) in variant.tabs">
+                            <h4 style="margin-bottom:20px;"><strong>{{ tab.label }}</strong></h4>
+                            <div ng-repeat="(propKey, prop) in tab.properties" class="flex">
+                                <div class="w-25">
+                                    <span>{{ prop.label }} <span ng-if="prop.validation.mandatory">*</span> </span>
+                                </div>
+                                <div class="w-25" style="margin-bottom:10px;">
+                                    <select ng-model="prop.csvHeader"
+                                            ng-options="header for header in vm.csvHeaders"
+                                            ng-required="prop.validation.mandatory"
+                                            name="{{ 'field_' + variantKey + '_' + tabKey + '_' + propKey  }}"
+                                            style="margin-bottom:2px;">
+                                    </select>
+
+                                    <span ng-if="vm.importForm.$submitted && vm.importForm['field_' + variantKey + '_' + tabKey + '_' + propKey].$invalid">This field is required.</span>
+                                </div>
                             </div>
                         </div>
                     </div>
