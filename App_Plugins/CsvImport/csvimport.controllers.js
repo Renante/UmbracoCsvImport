@@ -102,6 +102,15 @@
                                     }
                                     prop.value = fieldValue;
                                 }
+                                else {
+                                    switch (prop.editor) {
+                                        case 'Umbraco.Grid':
+                                            fieldValue = { "name": "", "sections": [] };
+                                            break;
+                                        default:
+                                    }
+                                    prop.value = fieldValue;
+                                }
                             });
                         });
 
