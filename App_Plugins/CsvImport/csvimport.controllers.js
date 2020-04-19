@@ -25,7 +25,7 @@
             header: true,
             complete: function (results) {
                 vm.csvHeaders = results.meta.fields;
-                vm.csvData = results.data.slice(0, 5);
+                vm.csvData = results.data;
                 vm.totalCsvRows = vm.csvData.length;
                 vm.isCsvReady = true;
             }
