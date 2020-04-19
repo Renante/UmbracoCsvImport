@@ -57,6 +57,13 @@
                     <h3>Step 4 of 4:</h3>
                     <h4>Map Fields</h4>
                 </div>
+                <p>
+                    The import saves the data directly to database so only properties that accept plain values such as 'Textbox and Textarea' are enabled by default.
+                </p>
+                <p>Unless you know what you're doing then you can enable them all</p>
+                <div>
+                    Enable all: <input type="checkbox" class="m-0" ng-model="vm.enableAllProps" />
+                </div>
                 <ng-form name="vm.importForm" novalidate>
                     <div ng-repeat="(variantKey, variant) in vm.editableVariants" class="panel-variant">
                         <h4 class="mb-1"><strong>{{ variant.language.name }}</strong></h4>
@@ -79,8 +86,9 @@
                         <div ng-repeat="(tabKey, tab) in variant.tabs">
                             <h5 style="margin-bottom:20px;"><strong>{{ tab.label }}</strong></h5>
                             <div ng-repeat="(propKey, prop) in tab.properties" class="flex">
-                                <div class="w-25">
+                                <div class="w-25 mb-1">
                                     <span>{{ prop.label }} <span ng-if="prop.validation.mandatory">*</span> </span>
+                                    <small class="prop-editor" ng-bind="prop.editor"></small>
                                 </div>
                                 <div class="w-25" style="margin-bottom:10px;">
                                     <select ng-model="prop.csvHeader"
@@ -88,7 +96,8 @@
                                             ng-required="prop.validation.mandatory"
                                             name="{{ 'field_' + variantKey + '_' + tabKey + '_' + propKey  }}"
                                             style="margin-bottom:2px;"
-                                            no-dirty-check>
+                                            no-dirty-check
+                                            ng-disabled="!vm.enableAllProps && (prop.editor !== 'Umbraco.TextBox' && prop.editor !== 'Umbraco.TextArea')">
                                     </select>
 
                                     <span ng-if="vm.importForm.$submitted && vm.importForm['field_' + variantKey + '_' + tabKey + '_' + propKey].$invalid">This field is required.</span>
@@ -99,7 +108,7 @@
                     <button type="submit" ng-click="vm.submit()" ng-disabled="vm.processing" class="btn btn-action">
                         {{ vm.processing ? 'Processing...' : 'Submit' }}
                     </button>
-                    
+
                     <p class="my-1" ng-if="vm.processing">{{ 'Processing ' + vm.currentItem + ' out of ' + vm.totalCsvRows + ' records...' }}</p>
                 </ng-form>
             </div>
