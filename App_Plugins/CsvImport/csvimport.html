@@ -1,14 +1,15 @@
 ﻿
-<div ng-controller="CsvImportController as vm">
+<div ng-controller="CsvImportController as vm" class="csvimport">
     <umb-box>
         <umb-box-header title="CSV Import" description="Import CSV file to Umbraco nodes."></umb-box-header>
         <umb-box-content>
 
             <div ng-show="vm.window.steps[0]">
                 <div class="step-label">
-                    <h3>Step 1 of 4:</h3>
+                    <h5>Step 1 of 4:</h5>
                     <h4>Upload CSV File</h4>
                 </div>
+                
                 <input type="file" accept="'.csv'" id="csvImportFile"/><br/>
                 <umb-button type="button"
                             label="Upload"
@@ -18,7 +19,7 @@
 
             <div ng-show="vm.window.steps[1]">
                 <div class="step-label">
-                    <h3>Step 2 of 4:</h3>
+                    <h5>Step 2 of 4:</h5>
                     <h4>Select Parent Node</h4>
                 </div>
                 <umb-button type="button"
@@ -31,7 +32,7 @@
             <div ng-show="vm.window.steps[2]">
                 <div ng-if="vm.contentTypes.length">
                     <div class="step-label">
-                        <h3>Step 3 of 4:</h3>
+                        <h5>Step 3 of 4:</h5>
                         <h4>Select Content Type</h4>
                     </div>
                     <select style="margin-bottom:0;"
@@ -54,19 +55,23 @@
 
             <div ng-show="vm.window.steps[3] && vm.isCsvReady">
                 <div class="step-label">
-                    <h3>Step 4 of 4:</h3>
+                    <h5>Step 4 of 4:</h5>
                     <h4>Map Fields</h4>
                 </div>
                 <p>
                     The import saves the data directly to database so only properties that accept plain values such as 'Textbox and Textarea' are enabled by default.
                 </p>
                 <p>Unless you know what you're doing then you can enable them all.</p>
-                <div>
-                    Enable all: <input type="checkbox" class="m-0" ng-model="vm.enableAllProps" />
-                </div>
+                
+                <umb-toggle checked="vm.enableAllProps"
+                            on-click="vm.enableAllProps = !vm.enableAllProps"
+                            show-labels="true"
+                            label-on="Enable all"
+                            label-off="Enable all">
+                </umb-toggle>
                 <ng-form name="vm.importForm" novalidate>
                     <div ng-repeat="(variantKey, variant) in vm.editableVariants" class="panel-variant">
-                        <h4 class="mb-1"><strong>{{ variant.language.name }}</strong></h4>
+                        <h3 class="mb-1"><strong>{{ variant.language.name }}</strong></h3>
                         <div class="flex">
                             <div class="w-25">
                                 <span>Page name: * </span>
@@ -84,7 +89,7 @@
                         </div>
 
                         <div ng-repeat="(tabKey, tab) in variant.tabs">
-                            <h5 style="margin-bottom:20px;"><strong>{{ tab.label }}</strong></h5>
+                            <h4 style="margin-bottom:20px;"><strong>{{ tab.label }}</strong></h4>
                             <div ng-repeat="(propKey, prop) in tab.properties" class="flex">
                                 <div class="w-25 mb-1">
                                     <span>{{ prop.label }} <span ng-if="prop.validation.mandatory">*</span> </span>
@@ -110,12 +115,25 @@
                     </button>
 
                     <p class="my-1" ng-if="vm.processing">{{ 'Processing ' + vm.currentItem + ' out of ' + vm.totalCsvRows + ' records...' }}</p>
+
+                    <ul class="logs">
+                        <li ng-repeat="log in vm.logs track by $index">{{ log }}</li>
+                    </ul>
                 </ng-form>
             </div>
 
             <div ng-show="vm.window.steps[4]">
-                <h3>Completed!</h3>
+                <div ng-if="vm.logs">
+                    <h4 class="mb-1">Completed with warnings.</h4>
+                    <ul class="logs">
+                        <li ng-repeat="log in vm.logs track by $index">{{ log }}</li>
+                    </ul>
+                </div>
+                <div ng-if="!vm.logs">
+                    <h4>Completed!</h4>
+                </div>
             </div>
+            
         </umb-box-content>
     </umb-box>
 </div>

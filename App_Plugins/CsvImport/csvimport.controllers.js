@@ -23,6 +23,7 @@
         var file = document.getElementById('csvImportFile').files[0];
         Papa.parse(file, {
             header: true,
+            skipEmptyLines: true,
             complete: function (results) {
                 vm.csvHeaders = results.meta.fields;
                 vm.csvData = results.data;
@@ -80,6 +81,7 @@
         }
     }
 
+    vm.logs = [];
     function processData() {
         var row = vm.csvData[0];
         if (row) {
@@ -89,10 +91,25 @@
                     myDoc.variants.length = 0;
                     myDoc.variants.push.apply(myDoc.variants, vm.editableVariants);
                     angular.forEach(myDoc.variants, function (variant) {
-                        variant.name = row[variant.csvHeader].substring(0, 250);
+
+                        var pageName = row[variant.csvHeader];
+                        if (pageName) {
+                            variant.name = pageName.substring(0, 250);
+                        }
+                        else {
+                            vm.logs.push(`Pagename is empty, Variant: ${variant.language.name}`);
+                            variant.name = '(empty)';
+                        }
+
                         angular.forEach(variant.tabs, function (tab) {
                             angular.forEach(tab.properties, function (prop) {
                                 var fieldValue = row[prop.csvHeader];
+
+                                if (!fieldValue && prop.validation.mandatory) {
+                                    vm.logs.push(`${prop.label} value is mandatory but file data is empty, Variant: ${variant.language.name}`);
+                                    fieldValue = "(empty)";
+                                }
+
                                 if (fieldValue) {
                                     switch (prop.editor) {
                                         case 'Umbraco.TextBox':
@@ -123,6 +140,8 @@
                             vm.currentItem++;
                             vm.csvData.shift();
                             processData();
+                        }, function () {
+                                console.log('error here');
                         });
                 });
         }
