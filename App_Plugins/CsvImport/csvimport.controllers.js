@@ -97,7 +97,7 @@
                             variant.name = pageName.substring(0, 250);
                         }
                         else {
-                            vm.logs.push(`Pagename is empty, Variant: ${variant.language.name}`);
+                            vm.logs.push(`Pagename is empty, Variant: ${variant.language?.name}`);
                             variant.name = '(empty)';
                         }
 
@@ -106,7 +106,7 @@
                                 var fieldValue = row[prop.csvHeader];
 
                                 if (!fieldValue && prop.validation.mandatory) {
-                                    vm.logs.push(`${prop.label} value is mandatory but file data is empty, Variant: ${variant.language.name}`);
+                                    vm.logs.push(`${prop.label} value is mandatory but file data is empty, Variant: ${variant.language?.name}`);
                                     fieldValue = "(empty)";
                                 }
 
@@ -141,7 +141,7 @@
                             vm.csvData.shift();
                             processData();
                         }, function () {
-                                console.log('error here');
+                            console.log('error here');
                         });
                 });
         }
