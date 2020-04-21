@@ -47,7 +47,7 @@
                     .then(function (result) {
                         vm.contentTypes = result.map(item => ({ id: item.id, name: item.name, alias: item.alias }));
                         editorService.close();
-                        vm.window.next();
+                        vm.window.moveTo(2);
                     });
             },
             close: function () {
@@ -73,12 +73,13 @@
         });
     }
 
+    vm.importCompleted = false;
     vm.processing = false;
     vm.submit = function () {
         if (vm.importForm.$valid) {
             vm.processing = true;
             vm.currentItem = 0;
-
+            vm.window.next();
             processData();
         }
         else {
@@ -132,6 +133,10 @@
                                         case 'Umbraco.TextBox':
                                             fieldValue = fieldValue.substring(0, 250);
                                             break;
+
+                                        case 'Umbraco.TrueFalse':
+                                            fieldValue = fieldValue.toString().toLowerCase() === 'true' || fieldValue.toString().toLowerCase() === '1'
+                                            break;
                                         default:
                                     }
                                     prop.value = fieldValue;
@@ -140,6 +145,10 @@
                                     switch (prop.editor) {
                                         case 'Umbraco.Grid':
                                             fieldValue = { "name": "", "sections": [] };
+                                            break;
+
+                                        case 'Umbraco.TrueFalse':
+                                            fieldValue = false;
                                             break;
                                         default:
                                     }
@@ -164,7 +173,7 @@
         }
         else {
             vm.processing = false;
-            vm.window.next();
+            vm.importCompleted = true;
         }
     }
 };
