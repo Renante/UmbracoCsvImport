@@ -87,7 +87,7 @@
         }
     }
 
-    var validDataTypes = ['Umbraco.TextBox', 'Umbraco.TextArea', 'Umbraco.TinyMCE'];
+    var validDataTypes = ['Umbraco.TextBox', 'Umbraco.TextArea', 'Umbraco.TinyMCE', 'Umbraco.TrueFalse'];
     vm.checkProperty = function (prop) {
         return !vm.enableAllProps && !validDataTypes.includes(prop.editor)
     }
