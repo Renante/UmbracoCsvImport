@@ -15,7 +15,11 @@
         },
         next: function () {
             this.moveTo(++this._currentIndex);
+        },
+        prev: function () {
+            this.moveTo(--this._currentIndex);
         }
+
     }
 
     vm.isCsvReady = false;

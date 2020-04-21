@@ -12,7 +12,7 @@
                 
                 <input type="file" accept="'.csv'" id="csvImportFile"/><br/>
                 <umb-button type="button"
-                            label="Upload"
+                            label="Next"
                             button-style="action"
                             action="vm.upload()"></umb-button>
             </div>
@@ -22,6 +22,11 @@
                     <h5>Step 2 of 4:</h5>
                     <h4>Select Parent Node</h4>
                 </div>
+                <umb-button type="button"
+                            label="Back"
+                            button-style="default"
+                            action="vm.isCsvReady = false;vm.window.prev();"></umb-button>
+
                 <umb-button type="button"
                             label="Browse"
                             button-style="action"
@@ -40,6 +45,12 @@
                             ng-options="contentType as contentType.name for contentType in vm.contentTypes"
                             no-dirty-check>
                     </select>
+
+                    <umb-button type="button"
+                                label="Back"
+                                button-style="default"
+                                action="vm.window.prev();"></umb-button>
+
                     <umb-button type="button"
                                 label="Submit"
                                 button-style="action"
@@ -110,6 +121,12 @@
                             </div>
                         </div>
                     </div>
+
+                    <umb-button type="button"
+                                label="Back"
+                                button-style="default"
+                                action="vm.processingContentType = false;vm.window.prev();"></umb-button>
+
                     <button type="submit" ng-click="vm.submit()" ng-disabled="vm.processing" class="btn btn-action">
                         {{ vm.processing ? 'Processing...' : 'Submit' }}
                     </button>
@@ -123,13 +140,13 @@
             </div>
 
             <div ng-show="vm.window.steps[4]">
-                <div ng-if="vm.logs">
+                <div ng-if="vm.logs.length">
                     <h4 class="mb-1">Completed with warnings.</h4>
                     <ul class="logs">
                         <li ng-repeat="log in vm.logs track by $index">{{ log }}</li>
                     </ul>
                 </div>
-                <div ng-if="!vm.logs">
+                <div ng-if="!vm.logs.length">
                     <h4>Completed!</h4>
                 </div>
             </div>
