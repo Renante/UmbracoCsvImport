@@ -113,7 +113,7 @@
                                             name="{{ 'field_' + variantKey + '_' + tabKey + '_' + propKey  }}"
                                             style="margin-bottom:2px;"
                                             no-dirty-check
-                                            ng-disabled="!vm.enableAllProps && (prop.editor !== 'Umbraco.TextBox' && prop.editor !== 'Umbraco.TextArea')">
+                                            ng-disabled="vm.checkProperty(prop)">
                                     </select>
 
                                     <span ng-if="vm.importForm.$submitted && vm.importForm['field_' + variantKey + '_' + tabKey + '_' + propKey].$invalid">This field is required.</span>

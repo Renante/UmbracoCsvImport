@@ -85,6 +85,11 @@
         }
     }
 
+    var validDataTypes = ['Umbraco.TextBox', 'Umbraco.TextArea', 'Umbraco.TinyMCE'];
+    vm.checkProperty = function (prop) {
+        return !vm.enableAllProps && !validDataTypes.includes(prop.editor)
+    }
+    
     vm.logs = [];
     function processData() {
         var row = vm.csvData[0];
