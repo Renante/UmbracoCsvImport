@@ -1,27 +1,20 @@
 ﻿
-<div ng-controller="CsvImportController as vm" class="csvimport">
-    <umb-box>
-        <umb-box-header title="CSV Import" description="Import CSV file to Umbraco nodes."></umb-box-header>
-        <umb-box-content>
+    <div ng-controller="CsvImportController as vm" class="csvimport">
 
-            <div ng-show="vm.window.steps[0]">
-                <div class="step-label">
-                    <h5>Step 1 of 4:</h5>
-                    <h4>Upload CSV File</h4>
-                </div>
-                
-                <input type="file" accept="'.csv'" id="csvImportFile"/><br/>
+        <umb-box ng-show="vm.window.steps[0]">
+            <umb-box-header title="Step 1 of 4:" description="Upload CSV file"></umb-box-header>
+            <umb-box-content>
+                <input type="file" accept="'.csv'" id="csvImportFile" /><br />
                 <umb-button type="button"
                             label="Next"
                             button-style="action"
                             action="vm.upload()"></umb-button>
-            </div>
+            </umb-box-content>
+        </umb-box>
 
-            <div ng-show="vm.window.steps[1]">
-                <div class="step-label">
-                    <h5>Step 2 of 4:</h5>
-                    <h4>Select Parent Node</h4>
-                </div>
+        <umb-box ng-show="vm.window.steps[1]">
+            <umb-box-header title="Step 2 of 4:" description="Select parent node"></umb-box-header>
+            <umb-box-content>
                 <umb-button type="button"
                             label="Back"
                             button-style="default"
@@ -32,32 +25,30 @@
                             button-style="action"
                             action="vm.selectParentNode();">
                 </umb-button>
-            </div>
+            </umb-box-content>
+        </umb-box>
 
-            <div ng-show="vm.window.steps[2]">
-                <div ng-if="vm.contentTypes.length">
-                    <div class="step-label">
-                        <h5>Step 3 of 4:</h5>
-                        <h4>Select Content Type</h4>
-                    </div>
-                    <select style="margin-bottom:0;"
-                            ng-model="vm.selectedContentType"
-                            ng-options="contentType as contentType.name for contentType in vm.contentTypes"
-                            no-dirty-check>
-                    </select>
+        <umb-box ng-show="vm.window.steps[2]">
+            <umb-box-header title="Step 3 of 4:" description="Select content type"></umb-box-header>
+            <umb-box-content>
+                <select style="margin-bottom:0;"
+                        ng-model="vm.selectedContentType"
+                        ng-options="contentType as contentType.name for contentType in vm.contentTypes"
+                        no-dirty-check>
+                </select>
 
-                    <umb-button type="button"
-                                label="Back"
-                                button-style="default"
-                                action="vm.window.prev();"></umb-button>
+                <umb-button type="button"
+                            label="Back"
+                            button-style="default"
+                            action="vm.window.prev();"></umb-button>
 
-                    <umb-button type="button"
-                                label="Submit"
-                                button-style="action"
-                                disabled="vm.processingContentType"
-                                action="vm.processingContentType = true;vm.processContentType()">
-                    </umb-button>
-                </div>
+                <umb-button type="button"
+                            label="Next"
+                            button-style="action"
+                            disabled="vm.processingContentType"
+                            action="vm.processingContentType = true;vm.processContentType()">
+                </umb-button>
+
                 <div ng-if="!vm.contentTypes.length">
                     <p>
                         No allowed types detected for selected node.
@@ -68,14 +59,14 @@
                                 action="vm.window.prev();"></umb-button>
                 </div>
 
-            </div>
+            </umb-box-content>
+        </umb-box>
 
-            <div ng-show="vm.window.steps[3] && vm.isCsvReady">
-                <div class="pb-2">
-                    <div class="step-label">
-                        <h5>Step 4 of 4:</h5>
-                        <h4>Map Fields</h4>
-                    </div>
+        <umb-box ng-show="vm.window.steps[3] && vm.isCsvReady">
+            <umb-box-header title="Step 4 of 4:" description="Map fields"></umb-box-header>
+            <umb-box-content>
+
+                <div>
                     <p>
                         The import saves the data directly to database so only properties that accept plain values such as 'Textbox and Textarea' are enabled by default.
                     </p>
@@ -101,7 +92,7 @@
                         </div>
 
                         <div class="fields-container">
-                            <div ng-repeat="(variantKey, variant) in vm.editableVariants" ng-show="variant.active">
+                            <div ng-repeat="(variantKey, variant) in vm.editableVariants" ng-show="variant.active" class="mb-1">
                                 <div class="flex">
                                     <div class="prop-label">
                                         <span>Page name: * </span>
@@ -150,33 +141,34 @@
                                             action="vm.processingContentType = false;vm.window.prev();"
                                             disabled="vm.processing"></umb-button>
 
-                                <button type="submit" ng-click="vm.submit()" ng-disabled="vm.processing" class="btn btn-action">
-                                    {{ vm.processing ? 'Processing...' : 'Submit' }}
+                                <button type="submit" ng-click="vm.submit()" class="btn btn-action">
+                                    Submit
                                 </button>
                             </div>
                         </div>
-
-                        <p class="my-1" ng-if="vm.processing">{{ 'Processing ' + vm.currentItem + ' out of ' + vm.totalCsvRows + ' records...' }}</p>
-
-                        <ul class="logs">
-                            <li ng-repeat="log in vm.logs track by $index">{{ log }}</li>
-                        </ul>
                     </ng-form>
                 </div>
-            </div>
+            </umb-box-content>
+        </umb-box>
 
-            <div ng-show="vm.window.steps[4]">
-                <div ng-if="vm.logs.length">
-                    <h4 class="mb-1">Completed with warnings.</h4>
-                    <ul class="logs">
-                        <li ng-repeat="log in vm.logs track by $index">{{ log }}</li>
-                    </ul>
+        <umb-box ng-show="vm.window.steps[4]">
+            <umb-box-content>
+                <div ng-if="!vm.importCompleted">
+                    <p class="my-1" ng-if="vm.processing">{{ 'Processing ' + vm.currentItem + ' out of ' + vm.totalCsvRows + ' records...' }}</p>
                 </div>
-                <div ng-if="!vm.logs.length">
-                    <h4>Completed!</h4>
+
+                <div ng-if="vm.importCompleted">
+                    <div ng-if="vm.logs.length">
+                        <h4 class="mb-1">Completed with warnings.</h4>
+                    </div>
+                    <div ng-if="!vm.logs.length">
+                        <h4>Completed!</h4>
+                    </div>
                 </div>
-            </div>
-            
-        </umb-box-content>
-    </umb-box>
-</div>
+
+                <ul class="logs">
+                    <li ng-repeat="log in vm.logs track by $index">{{ log }}</li>
+                </ul>
+            </umb-box-content>
+        </umb-box>
+    </div>
