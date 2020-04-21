@@ -1,0 +1,80 @@
+﻿.csvimport {
+    .mb-0 {
+        margin-bottom: 0;
+    }
+
+    .m-0 {
+        margin: 0;
+    }
+
+    .mb-1 {
+        margin-bottom: 1rem;
+    }
+
+    .mt-1 {
+        margin-top: 1rem;
+    }
+
+    .pb-2 {
+        padding-bottom: 2rem;
+    }
+
+    .my-1 {
+        margin: 1rem 0;
+    }
+
+    .mb-2 {
+        margin-bottom: 2rem;
+    }
+
+    .mr-1 {
+        margin-right: 1rem;
+    }
+
+    h3 {
+        font-weight: bold;
+    }
+
+    h3, h4 {
+        margin: 0;
+    }
+
+    .step-label {
+        margin-bottom: 1rem;
+    }
+
+    small {
+        display: block;
+        color: gray;
+    }
+
+    .logs {
+        color: #ff9412;
+    }
+
+    .variant-tab a {
+        color: lightgray;
+    }
+
+    .variant-tab--active a {
+        color: #000;
+    }
+
+    .prop-label {
+        width: 250px;
+        margin-right:1rem;
+    }
+
+    .prop-value {
+        width: 100%;
+
+        select {
+            width: 100%;
+        }
+    }
+
+    .fields-container {
+        width: 600px;
+        max-width: 100%;
+    }
+}

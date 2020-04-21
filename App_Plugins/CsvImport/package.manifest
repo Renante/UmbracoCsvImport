@@ -1,6 +1,6 @@
 ﻿{
   "css": [
-    "~/App_Plugins/CsvImport/csvimport.css"
+    "~/App_Plugins/CsvImport/csvimport.min.css"
   ],
   "javascript": [
     "~/App_Plugins/CsvImport/lib/papaparse.min.js",

@@ -67,6 +67,7 @@
                     angular.forEach(myDoc.variants, function (variant) {
                         vm.editableVariants.push(angular.copy(variant));
                     });
+                    vm.editableVariants[0].active = true;
                     vm.window.next();
                 });
         });
@@ -88,6 +89,13 @@
     var validDataTypes = ['Umbraco.TextBox', 'Umbraco.TextArea', 'Umbraco.TinyMCE'];
     vm.checkProperty = function (prop) {
         return !vm.enableAllProps && !validDataTypes.includes(prop.editor)
+    }
+
+    vm.changeTab = function (variant) {
+        angular.forEach(vm.editableVariants, function (v) {
+            v.active = false;
+        });
+        variant.active = true;
     }
     
     vm.logs = [];
