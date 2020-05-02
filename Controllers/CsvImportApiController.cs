@@ -20,32 +20,28 @@ namespace UmbracoCsvImport.Controllers
         {
             var cs = Services.ContentService;
             var cts = Services.ContentTypeService;
+            bool isMultiVariant = model.Variants.Count() > 1;
 
             try
             {
+                var defaultVariant = model.Variants.FirstOrDefault(variant => variant.Language.IsDefault);
                 var content = new Content(
-                        model.Variants.FirstOrDefault(v => v.Language.IsDefault)?.Language.Value,
+                        defaultVariant?.Language.Value,
                         model.ParentId,
                         cts.Get(model.ContentTypeAlias));
 
                 foreach (var variant in model.Variants)
                 {
-                    content.SetCultureName(variant.Language.Value, variant.Language.CultureInfo);
+                    if (isMultiVariant)
+                        content.SetCultureName(variant.Language.Value, variant.Language.CultureInfo);
 
                     if (variant.PropertyTypes != null)
-                    {
                         foreach (var prop in variant.PropertyTypes)
-                        {
                             if (prop.Variations.Equals(ContentVariation.Nothing))
-                            {
                                 content.SetValue(prop.Alias, prop.Value);
-                            }
                             else
-                            {
                                 content.SetValue(prop.Alias, prop.Value, culture: variant.Language.CultureInfo);
-                            }
-                        }
-                    }
+
                 }
 
                 cs.SaveAndPublish(content);
@@ -81,9 +77,10 @@ namespace UmbracoCsvImport.Controllers
                     PropertyTypes = new List<Models.PropertyType>()
                 };
 
-                foreach(var prop in properties)
+                foreach (var prop in properties)
                 {
-                    if(!(!lang.IsDefault && prop.Variations.Equals(ContentVariation.Nothing))) {
+                    if (!(!lang.IsDefault && prop.Variations.Equals(ContentVariation.Nothing)))
+                    {
                         var propType = new Models.PropertyType();
                         propType.Alias = prop.Alias;
                         propType.Name = prop.Name;
