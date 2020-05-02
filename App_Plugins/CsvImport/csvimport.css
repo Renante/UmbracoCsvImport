@@ -10,6 +10,9 @@
 .csvimport .mt-1 {
   margin-top: 1rem; }
 
+.csvimport .mt-2 {
+  margin-top: 2rem; }
+
 .csvimport .pb-2 {
   padding-bottom: 2rem; }
 
@@ -35,8 +38,14 @@
   display: block;
   color: gray; }
 
-.csvimport .logs {
+.csvimport .text-warning {
   color: #ff9412; }
+
+.csvimport .text-danger {
+  color: #f02e28; }
+
+.csvimport .text-success {
+  color: #2bc37c; }
 
 .csvimport .variant-tab a {
   color: lightgray; }
@@ -56,3 +65,7 @@
 .csvimport .fields-container {
   width: 600px;
   max-width: 100%; }
+
+.csvimport .btn-link {
+  text-decoration: underline;
+  padding: 0; }

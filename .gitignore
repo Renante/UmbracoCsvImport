@@ -1,5 +1,22 @@
-# Ignore everything:
-*
-
-# Except for the themes directories:
-!App_Plugins/CsvImport
+App_Data
+App_Plugins/ModelsBuilder
+App_Plugins/OsmMaps
+App_Plugins/StarterKit
+App_Start
+config
+Umbraco
+Media
+obj
+packages
+*.nupkg
+*.csproj
+*.sln
+Views
+*.config
+Properties
+Scripts
+css
+Global.*
+bin
+.vs
+compilerconfig.*
