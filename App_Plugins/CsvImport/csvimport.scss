@@ -15,6 +15,10 @@
         margin-top: 1rem;
     }
 
+    .mt-2 {
+        margin-top: 2rem;
+    }
+
     .pb-2 {
         padding-bottom: 2rem;
     }
@@ -48,8 +52,16 @@
         color: gray;
     }
 
-    .logs {
+    .text-warning {
         color: #ff9412;
+    }
+
+    .text-danger {
+        color: #f02e28;
+    }
+
+    .text-success {
+        color: #2bc37c;
     }
 
     .variant-tab a {
@@ -62,7 +74,7 @@
 
     .prop-label {
         width: 250px;
-        margin-right:1rem;
+        margin-right: 1rem;
     }
 
     .prop-value {
@@ -76,5 +88,10 @@
     .fields-container {
         width: 600px;
         max-width: 100%;
+    }
+
+    .btn-link {
+        text-decoration: underline;
+        padding: 0;
     }
 }

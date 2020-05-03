@@ -1,7 +1,7 @@
 ﻿function CsvImportController(
     contentTypeResource,
-    contentResource,
-    editorService) {
+    editorService,
+    csvImportResource) {
 
     var vm = this;
 
@@ -60,120 +60,75 @@
     vm.processingContentType = false;
     vm.processContentType = function () {
         contentTypeResource.getById(vm.selectedContentType.id).then(function (result) {
-            contentResource.getScaffold(vm.parentNodeId, vm.selectedContentType.alias)
-                .then(function (scaffold) {
-                    var myDoc = scaffold;
-                    vm.editableVariants = [];
-                    angular.forEach(myDoc.variants, function (variant) {
-                        vm.editableVariants.push(angular.copy(variant));
-                    });
-                    vm.editableVariants[0].active = true;
+            csvImportResource.getFields(vm.selectedContentType.id)
+                .then(function (result) {
+                    vm.page = result;
+                    vm.page.Variants[0].active = true;
                     vm.window.next();
                 });
         });
     }
 
-    vm.importCompleted = false;
+
     vm.processing = false;
+    vm.totalItemsImported = 0;
+    vm.totalItemsFailed = 0;
+    vm.completed = false;
     vm.submit = function () {
+        vm.currentItem = 0;
         if (vm.importForm.$valid) {
             vm.processing = true;
-            vm.currentItem = 0;
             vm.window.next();
-            processData();
+            angular.forEach(vm.csvData, function (row) {
+                importRow(row);
+            });
         }
-        else {
-            console.log('Invalid form');
-        }
-    }
-
-    var validDataTypes = ['Umbraco.TextBox', 'Umbraco.TextArea', 'Umbraco.TinyMCE', 'Umbraco.TrueFalse'];
-    vm.checkProperty = function (prop) {
-        return !vm.enableAllProps && !validDataTypes.includes(prop.editor)
     }
 
     vm.changeTab = function (variant) {
-        angular.forEach(vm.editableVariants, function (v) {
+        angular.forEach(vm.page.Variants, function (v) {
             v.active = false;
         });
         variant.active = true;
     }
-    
+
     vm.logs = [];
-    function processData() {
-        var row = vm.csvData[0];
-        if (row) {
-            contentResource.getScaffold(vm.parentNodeId, vm.selectedContentType.alias)
-                .then(function (scaffold) {
-                    var myDoc = scaffold;
-                    myDoc.variants.length = 0;
-                    myDoc.variants.push.apply(myDoc.variants, vm.editableVariants);
-                    angular.forEach(myDoc.variants, function (variant) {
 
-                        var pageName = row[variant.csvHeader];
-                        if (pageName) {
-                            variant.name = pageName.substring(0, 250);
-                        }
-                        else {
-                            vm.logs.push(`Pagename is empty, Variant: ${variant.language?.name}`);
-                            variant.name = '(empty)';
-                        }
+    function importRow(row) {
 
-                        angular.forEach(variant.tabs, function (tab) {
-                            angular.forEach(tab.properties, function (prop) {
-                                var fieldValue = row[prop.csvHeader];
+        var page = angular.copy(vm.page);
 
-                                if (!fieldValue && prop.validation.mandatory) {
-                                    vm.logs.push(`${prop.label} value is mandatory but file data is empty, Variant: ${variant.language?.name}`);
-                                    fieldValue = "(empty)";
-                                }
+        angular.forEach(page.Variants, function (variant) {
+            variant.Language.Value = row[variant.Language.CsvHeader];
+            angular.forEach(variant.PropertyTypes, function (propType) {
+                propType.Value = row[propType.CsvHeader];
+            });
 
-                                if (fieldValue) {
-                                    switch (prop.editor) {
-                                        case 'Umbraco.TextBox':
-                                            fieldValue = fieldValue.substring(0, 250);
-                                            break;
+            // remove empty fields before sending to server
+            variant.PropertyTypes = variant.PropertyTypes.filter(p => p.Value);
+        });
 
-                                        case 'Umbraco.TrueFalse':
-                                            fieldValue = fieldValue.toString().toLowerCase() === 'true' || fieldValue.toString().toLowerCase() === '1'
-                                            break;
-                                        default:
-                                    }
-                                    prop.value = fieldValue;
-                                }
-                                else {
-                                    switch (prop.editor) {
-                                        case 'Umbraco.Grid':
-                                            fieldValue = { "name": "", "sections": [] };
-                                            break;
-
-                                        case 'Umbraco.TrueFalse':
-                                            fieldValue = false;
-                                            break;
-                                        default:
-                                    }
-                                    prop.value = fieldValue;
-                                }
-                            });
-                        });
-
-                        variant.save = true;
-                        variant.publish = true;
-                    });
-
-                    contentResource.publish(myDoc, true, [''], false)
-                        .then(function (content) {
-                            vm.currentItem++;
-                            vm.csvData.shift();
-                            processData();
-                        }, function () {
-                            console.log('error here');
-                        });
-                });
+        var data = {
+            ContentTypeAlias: vm.selectedContentType.alias,
+            ParentId: vm.parentNodeId,
+            Page: page
         }
-        else {
-            vm.processing = false;
-            vm.importCompleted = true;
+
+        csvImportResource.publish(data)
+            .then(function () {
+                vm.totalItemsImported++;
+                checkIfDone();
+
+            }, function (error) {
+                vm.logs.push({ Success: false, Message: error.data.Message });
+                vm.totalItemsFailed++;
+                checkIfDone();
+            }, );
+    }
+
+    function checkIfDone() {
+        if (vm.csvData.length === (vm.totalItemsImported + vm.totalItemsFailed)) {
+            vm.completed = true;
         }
     }
 };

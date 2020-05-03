@@ -4,7 +4,8 @@
   ],
   "javascript": [
     "~/App_Plugins/CsvImport/lib/papaparse.min.js",
-    "~/App_Plugins/CsvImport/csvimport.controllers.js?v=3"
+    "~/App_Plugins/CsvImport/csvimport.resources.js",
+    "~/App_Plugins/CsvImport/csvimport.controllers.js"
   ],
 
   "dashboards": [
