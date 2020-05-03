@@ -119,7 +119,7 @@
                                 Page names are required.
                             </p>
                             
-                            <button type="submit" ng-click="vm.submit()" class="btn btn-action">
+                            <button type="submit" ng-disabled="vm.processing" ng-click="vm.submit()" class="btn btn-action">
                                 Submit
                             </button>
                         </div>
@@ -137,13 +137,14 @@
 
     <umb-box ng-show="vm.window.steps[4]">
         <umb-box-content>
-            <h3 ng-if="vm.totalItemsImported">{{ vm.totalItemsImported }} items imported</h3>
-            <h3 ng-if="vm.totalItemsFailed">{{ vm.totalItemsFailed }} items failed</h3>
+            <h3>{{ vm.totalItemsImported }} items imported</h3>
+            <h3>{{ vm.totalItemsFailed }} items failed</h3>
             <ul class="logs mt-1">
                 <li ng-repeat="log in vm.logs track by $index">
-                    <span ng-class="{'text-success' : log.Success, 'text-danger' : !log.Success}">{{ log.Message }}</span>
+                    <span class="text-danger">{{ log.Message }}</span>
                 </li>
             </ul>
+            <p class="text-success" ng-if="vm.completed">Import Completed!</p>
         </umb-box-content>
     </umb-box>
 </div>

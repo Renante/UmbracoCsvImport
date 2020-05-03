@@ -73,10 +73,11 @@
     vm.processing = false;
     vm.totalItemsImported = 0;
     vm.totalItemsFailed = 0;
+    vm.completed = false;
     vm.submit = function () {
         vm.currentItem = 0;
         if (vm.importForm.$valid) {
-
+            vm.processing = true;
             vm.window.next();
             angular.forEach(vm.csvData, function (row) {
                 importRow(row);
@@ -115,13 +116,20 @@
 
         csvImportResource.publish(data)
             .then(function () {
-                vm.logs.push({ Success: true, Message: 'Imported 1 row' });
                 vm.totalItemsImported++;
+                checkIfDone();
 
             }, function (error) {
                 vm.logs.push({ Success: false, Message: error.data.Message });
                 vm.totalItemsFailed++;
-            });
+                checkIfDone();
+            }, );
+    }
+
+    function checkIfDone() {
+        if (vm.csvData.length === (vm.totalItemsImported + vm.totalItemsFailed)) {
+            vm.completed = true;
+        }
     }
 };
 
