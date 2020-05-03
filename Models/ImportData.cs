@@ -6,6 +6,6 @@ namespace UmbracoCsvImport.Models
     {
         public string ContentTypeAlias { get; set; }
         public int ParentId { get; set; }
-        public IEnumerable<Variant> Variants { get; set; }
+        public Page Page { get; set; }
     }
 }

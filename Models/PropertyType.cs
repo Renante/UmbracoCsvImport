@@ -8,6 +8,6 @@ namespace UmbracoCsvImport.Models
         public string Alias { get; set; }
         public string CsvHeader { get; set; }
         public string Value { get; set; }
-        public ContentVariation Variations { get; set; }
+        public bool AllowVaryingByCulture { get; set; }
     }
 }

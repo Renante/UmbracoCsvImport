@@ -70,8 +70,8 @@
             <div class="mt-2">
                 <ng-form name="vm.importForm" novalidate>
 
-                    <div class="flex mb-1" ng-if="vm.variants.length > 1">
-                        <div ng-repeat="(variantKey, variant) in vm.variants" class="variant-tab mr-1" ng-class="{'variant-tab--active' : variant.active}">
+                    <div class="flex mb-1" ng-if="vm.page.Variants.length > 1">
+                        <div ng-repeat="(variantKey, variant) in vm.page.Variants" class="variant-tab mr-1" ng-class="{'variant-tab--active' : variant.active}">
                             <a href="" ng-click="vm.changeTab(variant)">
                                 <h3 class="mb-1"><strong>{{ variant.Language.CultureName }}</strong></h3>
                             </a>
@@ -79,7 +79,7 @@
                     </div>
 
                     <div class="fields-container">
-                        <div ng-repeat="(variantKey, variant) in vm.variants" ng-show="variant.active" class="mb-1">
+                        <div ng-repeat="(variantKey, variant) in vm.page.Variants" ng-show="variant.active" class="mb-1">
                             <div class="flex">
                                 <div class="prop-label">
                                     <span>Page name: * </span>

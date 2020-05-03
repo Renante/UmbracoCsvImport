@@ -2,49 +2,48 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Web;
 using System.Web.Mvc;
 using Umbraco.Core.Models;
-using Umbraco.Web;
 using Umbraco.Web.WebApi;
 using System.Net;
 using UmbracoCsvImport.Models;
-using UmbracoModels = Umbraco.Core.Models;
 
 namespace UmbracoCsvImport.Controllers
 {
     public class CsvImportApiController : UmbracoAuthorizedApiController
     {
+
         [HttpPost]
         public HttpResponseMessage Publish(ImportData model)
         {
             var cs = Services.ContentService;
             var cts = Services.ContentTypeService;
-            bool isMultiVariant = model.Variants.Count() > 1;
-
+            
             try
             {
-                var defaultVariant = model.Variants.FirstOrDefault(variant => variant.Language.IsDefault);
+                var defaultVariant = model.Page.Variants.FirstOrDefault(variant => variant.Language.IsDefault);
                 var content = new Content(
                         defaultVariant?.Language.Value,
                         model.ParentId,
                         cts.Get(model.ContentTypeAlias));
 
-                foreach (var variant in model.Variants)
+                foreach (var variant in model.Page.Variants)
                 {
-                    if (isMultiVariant)
+                    if (model.Page.AllowVaryingByCulture)
                         content.SetCultureName(variant.Language.Value, variant.Language.CultureInfo);
 
                     if (variant.PropertyTypes != null)
                         foreach (var prop in variant.PropertyTypes)
-                            if (prop.Variations.Equals(ContentVariation.Nothing))
-                                content.SetValue(prop.Alias, prop.Value);
-                            else
+                            if (prop.AllowVaryingByCulture)
                                 content.SetValue(prop.Alias, prop.Value, culture: variant.Language.CultureInfo);
-
+                            else
+                                content.SetValue(prop.Alias, prop.Value);
                 }
 
-                cs.SaveAndPublish(content);
+                if (model.Page.AllowVaryingByCulture)
+                    cs.SaveAndPublish(content, defaultVariant.Language.CultureInfo);
+                else
+                    cs.SaveAndPublish(content);
 
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
@@ -57,11 +56,19 @@ namespace UmbracoCsvImport.Controllers
         [HttpGet]
         public HttpResponseMessage GetModel(int contentTypeId)
         {
-            var variants = new List<Variant>();
-            var languages = Services.LocalizationService.GetAllLanguages();
+            var page = new Page();
             var contentType = Services.ContentTypeService.Get(contentTypeId);
             var properties = contentType.CompositionPropertyTypes;
 
+            page.Variants = new List<Variant>();
+            page.AllowVaryingByCulture = contentType.Variations.Equals(ContentVariation.Culture);
+
+            List<ILanguage> languages;
+            if (page.AllowVaryingByCulture)
+                languages = Services.LocalizationService.GetAllLanguages().ToList();
+            else
+                languages = Services.LocalizationService.GetAllLanguages().Where(lang => lang.IsDefault).ToList();
+            
             foreach (var lang in languages)
             {
                 var language = new Models.Language()
@@ -79,20 +86,24 @@ namespace UmbracoCsvImport.Controllers
 
                 foreach (var prop in properties)
                 {
-                    if (!(!lang.IsDefault && prop.Variations.Equals(ContentVariation.Nothing)))
+                    var propAllowVaryingByCulture = prop.Variations.Equals(ContentVariation.Culture);
+
+                    if (!lang.IsDefault && !propAllowVaryingByCulture)
+                    { }
+                    else
                     {
                         var propType = new Models.PropertyType();
                         propType.Alias = prop.Alias;
                         propType.Name = prop.Name;
-                        propType.Variations = prop.Variations;
+                        propType.AllowVaryingByCulture = propAllowVaryingByCulture;
                         variant.PropertyTypes.Add(propType);
                     }
                 }
 
-                variants.Add(variant);
+                page.Variants.Add(variant);
             }
 
-            return Request.CreateResponse(HttpStatusCode.OK, variants);
+            return Request.CreateResponse(HttpStatusCode.OK, page);
         }
     }
 }

@@ -60,11 +60,10 @@
     vm.processingContentType = false;
     vm.processContentType = function () {
         contentTypeResource.getById(vm.selectedContentType.id).then(function (result) {
-
             csvImportResource.getFields(vm.selectedContentType.id)
                 .then(function (result) {
-                    vm.variants = result;
-                    vm.variants[0].active = true;
+                    vm.page = result;
+                    vm.page.Variants[0].active = true;
                     vm.window.next();
                 });
         });
@@ -86,7 +85,7 @@
     }
 
     vm.changeTab = function (variant) {
-        angular.forEach(vm.variants, function (v) {
+        angular.forEach(vm.page.Variants, function (v) {
             v.active = false;
         });
         variant.active = true;
@@ -96,9 +95,9 @@
 
     function importRow(row) {
 
-        var variants = angular.copy(vm.variants);
+        var page = angular.copy(vm.page);
 
-        angular.forEach(variants, function (variant) {
+        angular.forEach(page.Variants, function (variant) {
             variant.Language.Value = row[variant.Language.CsvHeader];
             angular.forEach(variant.PropertyTypes, function (propType) {
                 propType.Value = row[propType.CsvHeader];
@@ -111,7 +110,7 @@
         var data = {
             ContentTypeAlias: vm.selectedContentType.alias,
             ParentId: vm.parentNodeId,
-            Variants: variants
+            Page: page
         }
 
         csvImportResource.publish(data)
